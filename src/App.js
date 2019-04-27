@@ -1,26 +1,46 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      dogs: [],
+      currentBreed: ''
+    };
+  }
+
+  componentDidMount() {
+    this.getDogs('https://dog.ceo/api/breeds/list/all');
+  }
+
+  getDogs = URL => {
+    fetch(URL)
+      .then(res => {
+        return res.json();
+      })
+      .then(data => {
+        console.log(data);
+        const dogList = data.message;
+        this.setState( {
+          dogs: Object.keys(dogList), 
+          currentBreed: Object.keys(dogList)[0]
+        })
+      })
+      .catch(err => {
+        throw new Error(err);
+      });
+  };
+
+  render() {
+    return (
+      <div className="App">
+        <h1>Dogs</h1>
+        {console.log(this.state.currentBreed)}
+        {console.log(this.state.dogs)}
+      </div>
+    );
+  }
 }
 
 export default App;
